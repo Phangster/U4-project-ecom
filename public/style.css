@@ -123,7 +123,7 @@ navi ul li a {
 
 /*##################### Footer ###########################*/
 
-section {
+section1 {
   width: 100%;
   display: inline-block;
   background: #fff;
@@ -143,6 +143,9 @@ section {
 }
 
 #email {
+    text-align: left;
+}
+#contactUs {
     text-align: right;
 }
 
@@ -343,3 +346,32 @@ img{
     object-fit: cover;
     background-position: center;
 }
+
+.card-title {
+    font-weight: bolder;
+  }
+  
+  .background-image {
+    background:url("https://static.pexels.com/photos/30732/pexels-photo-30732.jpg");
+    background-position: center;
+    background-size: cover;
+    display: block;
+    left: 0;
+    position: fixed;
+    right: 0;
+    z-index: 1;
+    height: 100%;
+  }
+  
+  .title h3 {
+    margin: 0;
+    padding: 40px 0;
+    position: relative;
+    z-index: 2;
+  }
+  
+  .card {
+    top: 40px;
+    position: relative;
+    z-index: 2;
+  }

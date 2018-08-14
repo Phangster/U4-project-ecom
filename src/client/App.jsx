@@ -1,11 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import LoginForm from './Components/LoginForm';
+import LoginForm from './Components/User/LoginForm';
+import SignUpForm from './Components/User/SignUpForm';
+import Profile from './Components/User/Profile';
 import {HashRouter as Router,Switch,Route,Link,Redirect } from 'react-router-dom';
 import Travel from './Components/Travel';
 import Gym from './Components/Gym';
 import Home from './Components/Home';
-import CreateAcc from './Components/CreateAcc';
 import Workout from './Components/Gym/workout';
 import Diet from './Components/Gym/diet';
 import Cart from './Components/Cart/cart';
@@ -44,7 +45,7 @@ export default class App extends React.Component {
                             <li><Link to="/">Home</Link></li>
                             <li><Link to="/gym">Gym</Link></li>
                             <li><Link to="/travel">Travel</Link></li>
-                            <li><Link to="/login">Login<i class="fa fa-sign-in" aria-hidden="true"></i></Link></li>
+                            <li><Link to="/login"><i class="fa fa-sign-in" aria-hidden="true"></i></Link></li>
                         </ul>
                     </div>
                 </navi>
@@ -56,21 +57,22 @@ export default class App extends React.Component {
                     <Route path='/gym/diet' render={()=><Diet />}/>
                     <Route path='/gym' render={()=><Gym />}/>
                     <Route path='/travel' render={()=><Travel />}/>
-                    <Route path='/login' render={()=><LoginForm loginHandler={this.loginHandler} />}/>
-                    <Route path='/create_account' render={()=><CreateAcc />}/>
+                    <Route path='/login' render={()=><LoginForm />}/>
+                    <Route path='/signup' render={()=><SignUpForm />}/>
                     <Route path='/cart' render={()=><Cart />}/>
+                    <Route path='/profile' render={()=><Profile />}/>
                 </Switch>
             </div>
             <div>
-            <section>
+            <section1>
                 <div className="containForFooterSection">
                     <div className="contactUs">
                         <p> Don't be shy - drop us a line </p>
                         <p> We're looking forward to speak to you </p>
                     </div>
-                    <p id="email"> hello@travy.com</p>
+                    <p id="contactUs"> hello@travy.com</p>
                 </div>
-            </section>
+            </section1>
             <footer class="footer-distributed">
                 <div class="footer-left">
                     <div class="logofooter"><img src="../images/logo.png"/></div>
