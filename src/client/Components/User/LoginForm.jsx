@@ -5,15 +5,22 @@ export default class LoginFrom extends React.Component {
     constructor() {
         super();
         this.state = {
-            name: null,
             email: null,
             password: null,
-            confirmPassword: null,
             message: '',
         }
+        this.changeHandler = this.changeHandler.bind(this);
+        this.submitLoginHandler = this.submitLoginHandler.bind(this);
     }
 
-    submitHandler(event){
+    changeHandler(event){
+        let text = event.target.value;
+        console.log(text)
+        let field = event.target.id;
+        this.setState({[field] : text});
+    }
+
+    submitLoginHandler(event){
         event.preventDefault();
         const opts = {
             headers: {'Content-Type': 'application/json'},
@@ -21,7 +28,7 @@ export default class LoginFrom extends React.Component {
             credentials: 'include',
             body: JSON.stringify({...this.state})
           }
-        fetch('/api/submit-user', opts)
+        fetch('/api/submit-login', opts)
             .then(apiResponse => apiResponse.json()) //Ajax Fetch http response header
             .then(apiData => {
                 this.props.loginHandler(apiData)
@@ -34,11 +41,14 @@ export default class LoginFrom extends React.Component {
             });
     }
 
-    changeHandler(){
-
-    }
 
     render(){
+        console.log('message from login form', this.state.message)
+
+        if (this.props.redirectLogin) {
+            return (<Redirect to='/profile' />)
+        }
+
         return(
             <div>
                <div class="background-image"></div>
@@ -50,18 +60,18 @@ export default class LoginFrom extends React.Component {
                     <div class="card grey lighten-3">
                     <div class="card-content">
                         <h4 class="card-title center-align">Login</h4>
-                        <form>
+                        <form onSubmit={this.submitLoginHandler}>
                         <div class="row">
                             <div class="input-field col s12">
                             <i class="material-icons prefix">email</i>
-                            <input type="email" id="email" class="validate" />
+                            <input type="email" id="email" class="validate" onChange={this.changeHandler} />
                             <label for="email">Email</label>
                             </div>
                         </div>
                         <div class="row">
                             <div class="input-field col s12">
                             <i class="material-icons prefix">vpn_key</i>
-                            <input type="password" id="password" class="validate" />
+                            <input type="password" id="password" class="validate" onChange={this.changeHandler} />
                             <label for="email">Password</label>
                             </div>
                         </div>

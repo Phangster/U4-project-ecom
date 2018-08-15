@@ -31,6 +31,9 @@ module.exports = {
     },
     plugins: [new webpack.HotModuleReplacementPlugin()],
     devServer: {
-        hot: true
+        hot: true,
+        headers: {
+            'Access-Control-Allow-Origin': '*'
+        }
     }
 }

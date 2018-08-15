@@ -1,9 +1,11 @@
-const userLogin = require('./controllers/userLogin')
+const userController = require('./controllers/userController')
 
 module.exports = (app) => {
 
-    app.post('/api/submit-new-user', userLogin.postNewUser);
+    app.post('/api/submit-new-user', userController.postNewUser);
 
-    // app.post('/api/submit-login', userLogin.postUserLogin);
+    app.post('/api/submit-login', userController.postUserLogin);
+
+    app.post('/api/login-check', userController.loginCheck);
 
 }

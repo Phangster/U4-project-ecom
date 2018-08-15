@@ -11,8 +11,8 @@ export default class SignUpForm extends React.Component {
             confirmPassword: null,
             message: '',
         }
-        this.changeHandler = this.changeHandler.bind(this)
-        this.submitSignUpHandler = this.submitSignUpHandler.bind(this)
+        this.changeHandler = this.changeHandler.bind(this);
+        this.submitSignUpHandler = this.submitSignUpHandler.bind(this);
     }
 
     submitSignUpHandler(event) {
@@ -39,13 +39,11 @@ export default class SignUpForm extends React.Component {
     changeHandler(event){
         let text = event.target.value;
         let field = event.target.id;
-        console.log(field)
         this.setState({[field]: text});
-        console.log('name', this.state.name)
-        console.log('password', this.state.password)
     }
 
     render(){
+        console.log('message from signup form', this.state.message)
 
         const { redirectLogin } = this.props
         if (redirectLogin) {
