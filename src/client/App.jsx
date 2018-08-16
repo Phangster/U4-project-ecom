@@ -23,10 +23,13 @@ export default class App extends React.Component {
         this.state = {
             loggedIn: false,
             user: null,
-            redirectLogin: false
+            redirectLogin: false,
+            itemData: null,
         };
         this.loginHandler = this.loginHandler.bind(this);
         this.signoutHandler = this.signoutHandler.bind(this);
+        this.getItems = this.getItems.bind(this);
+
 
     }
     
@@ -50,6 +53,8 @@ export default class App extends React.Component {
             .catch((error) =>{
                 console.error(error);
             });
+            
+        this.getItems();
     }
 
     loginHandler(apiData) {
@@ -67,6 +72,20 @@ export default class App extends React.Component {
         })
     }
 
+    getItems(){
+        fetch('/api/get-items')
+            .then(apiResponse => apiResponse.json())
+            .then(apiData => {
+                console.log('apidata', apiData)
+                this.setState({
+                    itemData: apiData.result
+                });
+            })
+            .catch((error) =>{
+                console.error(error);
+            });
+    }
+
     render() {
         var { loggedIn, user, redirectLogin } = this.state;
         return (
@@ -81,12 +100,12 @@ export default class App extends React.Component {
                             <Route exact path='/' render={()=><Home />}/>
                             <Route path='/login' render={()=><LoginForm loginHandler={this.loginHandler} redirectLogin={redirectLogin}/>}/>
                             <Route path='/signup' render={()=><SignUpForm />}/>
-
-                            {/* Private Routes */}
-                            <Route path='/gym/workout' render={()=><Workout />}/>
+                            <Route path='/gym/workout' render={()=><Workout getItems={this.state.itemData}/>}/>
                             <Route path='/gym/diet' render={()=><Diet />}/>
                             <Route path='/gym' render={()=><Gym />}/>
                             <Route path='/travel' render={()=><Travel />}/>
+
+                            {/* Private Routes */}
                             <Route path='/cart' render={()=><Cart loggedIn={loggedIn} user={user}/>}/>
                             <Route path='/profile'render={()=><Profile loggedIn={loggedIn} user={user}/>}/>
                         </Switch>
