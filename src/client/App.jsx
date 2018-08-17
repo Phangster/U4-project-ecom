@@ -5,7 +5,7 @@ import Navbar from './Components/Navbar/navbar';
 import Footer from './Components/Footer/footer';
 import LoginForm from './Components/User/LoginForm';
 import SignUpForm from './Components/User/SignUpForm';
-import Profile from './Components/User/profile';
+import Profile from 'Components/User/profile';
 import {HashRouter as Router,Switch,Route,BrowserRouter,Link,Redirect } from 'react-router-dom';
 import Travel from './Components/Travel';
 import Gym from './Components/Gym';
