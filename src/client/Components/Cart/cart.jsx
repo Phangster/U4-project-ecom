@@ -13,14 +13,16 @@ const styles = {
     },
 }
 export default class cart extends React.Component {
-    constructor() {
-        super();
-    }
+    
+    
     render(){
-        return(
-            <div style={styles.page}>
-                Hello
-            </div>
-        )
+        const {loggedIn, cartItem} = this.props;
+        if(loggedIn){
+            return(
+                <div style={styles.page}>
+                    {cartItem}
+                </div>
+            )
+        }
     }
 }

@@ -24,42 +24,49 @@ const context = {
     display: 'block'
 }
 
+const row = {
+    display: 'inline'
+}
+
 export default class workout extends React.Component {
     constructor() {
         super();
     }
     render(){
         const items = this.props.getItems;
-        const content = items.map((item)=>{
-            console.log(item)
+        const content = items.map((item, index)=>{
             return(
-                <div class="row">
-                    <div class="col s6 m4" style={display}>
-                    <div class="card">
-                        <div class="card-image">
+                <li>
+                    <div className="col s6 m4" style={display}>
+                    <div className="card">
+                        <div className="card-image">
                         <img src={"../images/" + item.img} />
-                        <span class="card-title">{item.item}</span>
-                        <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
+                        <span className="card-title">{item.item}</span>
+                        <a className="btn-floating halfway-fab waves-effect waves-light"><i id={index}className="fa fa-heart red waves-effect waves-light" aria-hidden="true" onClick={this.props.addFavouriteHandler}></i></a>
                         </div>
-                        <div class="card-content">
-                            <span class="card-content activator"><p>{item.short_description}</p><i class="material-icons right">arrow_drop_up</i></span>
+                        <div className="card-content">
+                            <span className="card-content activator"><p>{item.short_description}</p><i className="material-icons right">arrow_drop_up</i></span>
                         </div>
-                        <div class="card-reveal">
-                            <span class="card-title grey-text text-darken-4">{item.item}<i class="material-icons right">close</i></span>
+                        <div className="card-reveal">
+                            <span className="card-title grey-text text-darken-4">{item.item}<i className="material-icons right">close</i></span>
                             <p>{item.long_description}}</p>
-                            <p>${item.price.toFixed(2)}</p>
-                            <a class="waves-effect waves-light btn">Add to Cart</a>
+                            <p className="price">${item.price.toFixed(2)}</p>
+                            <a className="waves-effect waves-light btn" id={index} price={item.price} image={item.img} item= {item.item} onClick={this.props.addItemHandler}>Add to Cart</a>
                         </div>
                     </div>
                     </div>
-                </div>
+                </li>
             )
         })
         return(
             <div>
                 <div style={styles.page}></div>
                 <div style={context}>
-                    {content}
+                <div class="row" style={row}>
+                    <ul>
+                        {content}
+                    </ul>
+                </div>
                 </div>
             </div>
         )

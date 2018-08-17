@@ -6,7 +6,7 @@ import Footer from './Components/Footer/footer';
 import LoginForm from './Components/User/LoginForm';
 import SignUpForm from './Components/User/SignUpForm';
 import Profile from './Components/User/profile';
-import {HashRouter as Router,Switch,Route,Link,Redirect } from 'react-router-dom';
+import {HashRouter as Router,Switch,Route,BrowserRouter,Link,Redirect } from 'react-router-dom';
 import Travel from './Components/Travel';
 import Gym from './Components/Gym';
 import Home from './Components/Home';
@@ -25,11 +25,17 @@ export default class App extends React.Component {
             user: null,
             redirectLogin: false,
             itemData: null,
+            itemCount: 0,
+            showMenu: false,
+            cartItem: [],
         };
         this.loginHandler = this.loginHandler.bind(this);
         this.signoutHandler = this.signoutHandler.bind(this);
         this.getItems = this.getItems.bind(this);
-
+        this.addItemHandler= this.addItemHandler.bind(this);
+        this.addFavouriteHandler=this.addFavouriteHandler.bind(this);
+        this.openMenu=this.openMenu.bind(this);
+        this.cartItem=this.cartItem.bind(this);
 
     }
     
@@ -53,7 +59,7 @@ export default class App extends React.Component {
             .catch((error) =>{
                 console.error(error);
             });
-            
+
         this.getItems();
     }
 
@@ -76,7 +82,6 @@ export default class App extends React.Component {
         fetch('/api/get-items')
             .then(apiResponse => apiResponse.json())
             .then(apiData => {
-                console.log('apidata', apiData)
                 this.setState({
                     itemData: apiData.result
                 });
@@ -86,12 +91,44 @@ export default class App extends React.Component {
             });
     }
 
+    addItemHandler(event){
+        const obj = [];
+        const price =event.target.getAttribute('price');
+        const image =event.target.getAttribute('image');
+        const item =event.target.getAttribute('item');
+        const id =event.target.getAttribute('id');
+        obj.push(id, item, image, price );
+        const currentCartItem = this.state.cartItem.slice();
+        currentCartItem.push(obj);
+        const count = this.state.itemCount + 1;
+        this.setState({
+            itemCount: count,
+            cartItem: currentCartItem
+        });
+    }
+
+    addFavouriteHandler(){
+        console.log("favourite")
+    }
+
+    openMenu(event) {
+        event.preventDefault(); 
+        this.setState({
+          showMenu: true,
+        });
+    }
+
+    cartItem(event){
+        
+    }
+
     render() {
+        console.log('cartttttt',this.state.cartItem)
         var { loggedIn, user, redirectLogin } = this.state;
         return (
                 [   
                 <header>
-                    <Navbar user={user} loggedIn={this.state.loggedIn} signoutHandler={this.signoutHandler}/>
+                    <Navbar user={user} loggedIn={loggedIn} signoutHandler={this.signoutHandler} itemCount={this.state.itemCount} showMenu={this.state.showMenu} openMenu={this.openMenu} cartItem={this.cartItem}/>
                 </header>,
                 <main>
                     <div className="container1">
@@ -100,13 +137,13 @@ export default class App extends React.Component {
                             <Route exact path='/' render={()=><Home />}/>
                             <Route path='/login' render={()=><LoginForm loginHandler={this.loginHandler} redirectLogin={redirectLogin}/>}/>
                             <Route path='/signup' render={()=><SignUpForm />}/>
-                            <Route path='/gym/workout' render={()=><Workout getItems={this.state.itemData}/>}/>
+                            <Route path='/gym/workout' render={()=><Workout getItems={this.state.itemData} addItemHandler={this.addItemHandler} addFavouriteHandler={this.addFavouriteHandler}/>}/>
                             <Route path='/gym/diet' render={()=><Diet />}/>
                             <Route path='/gym' render={()=><Gym />}/>
                             <Route path='/travel' render={()=><Travel />}/>
 
                             {/* Private Routes */}
-                            <Route path='/cart' render={()=><Cart loggedIn={loggedIn} user={user}/>}/>
+                            <Route path='/cart' render={()=><Cart loggedIn={loggedIn} user={user} cartItem={this.state.cartItem}/>}/>
                             <Route path='/profile'render={()=><Profile loggedIn={loggedIn} user={user}/>}/>
                         </Switch>
                     </div>
@@ -119,9 +156,11 @@ export default class App extends React.Component {
 
 ReactDOM.render(
     <ErrorBoundary>
-        <Router>
+        <BrowserRouter>
+        {/* <Router> */}
             <App />
-        </Router>
+        {/* </Router> */}
+        </BrowserRouter>
     </ErrorBoundary>,
     document.getElementById('app')
 )

@@ -37,11 +37,10 @@ export default class Profile extends React.Component {
                         <img class="avatar" src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcTF_erFD1SeUnxEpvFjzBCCDxLvf-wlh9ZuPMqi02qGnyyBtPWdE-3KoH3s" alt="Ash" />
                         <div class="username">{user.user_name}</div>
                     <div class="bio">
-                        Senior UI Designer
+                        Full-Time House Husband
                     </div>
                         <div class="description">
-                        I use to design websites and applications
-                        for the web.
+                        I like to cook, gym and build robots
                     </div>
                     <ul class="data">
                         <li>
