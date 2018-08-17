@@ -25,4 +25,5 @@ require('./routes')(app);
 
 app.use(fallback(resolve(__dirname, '..', '..', 'public/index.html')));
 
-const server = app.listen(3000, () => {console.log('Setting sail from 3000!!!')});
+var port = process.env.PORT || 3000
+const server = app.listen(port, () => {console.log('Setting sail from ' + port + '!!!')});
