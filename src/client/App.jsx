@@ -3,9 +3,9 @@ import ReactDOM from 'react-dom';
 import ErrorBoundary from './Components/error';
 import Navbar from './Components/Navbar/navbar';
 import Footer from './Components/Footer/footer';
-import LoginForm from './Components/User/LoginForm';
+import LoginForm from './Components/User/LoginForm'; 
 import SignUpForm from './Components/User/SignUpForm';
-import Profile from 'Components/User/profile';
+import Profile from './Components/User/Profile';
 import {HashRouter as Router,Switch,Route,BrowserRouter,Link,Redirect } from 'react-router-dom';
 import Travel from './Components/Travel';
 import Gym from './Components/Gym';
@@ -26,16 +26,18 @@ export default class App extends React.Component {
             redirectLogin: false,
             itemData: null,
             itemCount: 0,
-            showMenu: false,
             cartItem: [],
+            cartUserItem: null,
         };
         this.loginHandler = this.loginHandler.bind(this);
         this.signoutHandler = this.signoutHandler.bind(this);
         this.getItems = this.getItems.bind(this);
         this.addItemHandler= this.addItemHandler.bind(this);
         this.addFavouriteHandler=this.addFavouriteHandler.bind(this);
-        this.openMenu=this.openMenu.bind(this);
-        this.cartItem=this.cartItem.bind(this);
+        this.getCartItem=this.getCartItem.bind(this);
+        this.addFromCart=this.addFromCart.bind(this);
+        this.removeFromCart=this.removeFromCart.bind(this);
+
 
     }
     
@@ -61,14 +63,21 @@ export default class App extends React.Component {
             });
 
         this.getItems();
+
+        //call cookie library communicate with the browser itself
     }
 
     loginHandler(apiData) {
         if (apiData.loginStatus) {
-            this.setState({loggedIn: true, user: apiData.result, redirectLogin: true});
+            this.setState({
+                loggedIn: true,
+                user: apiData.result,
+                redirectLogin: true
+            });
             console.log("YOU'RE  LOGGED IN as", apiData.result.user_name)
         };
     }
+
     signoutHandler(){
         console.log(this.state.loggedIn)
         this.setState({
@@ -76,6 +85,7 @@ export default class App extends React.Component {
             user: null,
             redirectLogin: false
         })
+        document.cookie = 'user_id=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
     }
 
     getItems(){
@@ -92,43 +102,92 @@ export default class App extends React.Component {
     }
 
     addItemHandler(event){
-        const obj = [];
-        const price =event.target.getAttribute('price');
-        const image =event.target.getAttribute('image');
-        const item =event.target.getAttribute('item');
-        const id =event.target.getAttribute('id');
-        obj.push(id, item, image, price );
-        const currentCartItem = this.state.cartItem.slice();
-        currentCartItem.push(obj);
+        let id = event.target.id;
+        id = parseInt(id);
         const count = this.state.itemCount + 1;
+        const cartItem = this.state.cartItem;
+        const products = this.state.itemData;
+        const selectedItem = products[id];
+        if(selectedItem['count'] >= 1 ){
+            selectedItem.count++;
+        }else{
+            selectedItem['count'] = 1;
+            cartItem.push(selectedItem);
+        }
         this.setState({
             itemCount: count,
-            cartItem: currentCartItem
+            cartItem: cartItem
         });
+        
+        const opts = {
+            headers: {'Content-Type': 'application/json'}, //sending over a javascript object
+            method: 'POST',
+            credentials: 'include',
+            body: JSON.stringify({item_id: id})
+          }
+        fetch('/api/adding-to-cart', opts)
+            .then(apiResponse => apiResponse.json())
+            .catch((error) =>{
+                console.error(error);
+            });
+    }
+
+    getCartItem(){
+        fetch('/api/view-cart-items')
+            .then(apiResponse => apiResponse.json())
+            .then(apiData => {
+                const cartUserItem = apiData.result;
+                this.setState({
+                    cartUserItem: cartUserItem
+                });
+            })
+            .catch((error) =>{
+                console.error(error);
+            });
+            console.log(this.state.cartUserItem )
     }
 
     addFavouriteHandler(){
         console.log("favourite")
     }
 
-    openMenu(event) {
-        event.preventDefault(); 
+    addFromCart(index){
+        console.log('add');
+        const cartItem = this.state.cartItem;
+        if(cartItem[index].count >= 1){
+            cartItem[index].count++;
+            debugger;
+        }
+        const currentItemCount = this.state.itemCount;
+        const itemCount = currentItemCount + 1;
         this.setState({
-          showMenu: true,
-        });
+            cartItem: cartItem,
+            itemCount: itemCount
+        })
     }
 
-    cartItem(event){
-        
+    removeFromCart(index){
+        console.log('remove')
+        const cartItem = this.state.cartItem;
+        if(cartItem[index].count > 0){
+            cartItem[index].count--;
+            if(cartItem[index].count === 0){
+                cartItem.splice(index, 1);
+            }  
+        }
+        const currentItemCount = this.state.itemCount;
+        const itemCount = currentItemCount - 1;
+        this.setState({
+            cartItem: cartItem,
+            itemCount: itemCount
+        })
     }
-
     render() {
-        console.log('cartttttt',this.state.cartItem)
         var { loggedIn, user, redirectLogin } = this.state;
         return (
                 [   
                 <header>
-                    <Navbar user={user} loggedIn={loggedIn} signoutHandler={this.signoutHandler} itemCount={this.state.itemCount} showMenu={this.state.showMenu} openMenu={this.openMenu} cartItem={this.cartItem}/>
+                    <Navbar user={user} loggedIn={loggedIn} signoutHandler={this.signoutHandler} itemCount={this.state.itemCount} getCartItem={this.getCartItem}/>
                 </header>,
                 <main>
                     <div className="container1">
@@ -143,7 +202,7 @@ export default class App extends React.Component {
                             <Route path='/travel' render={()=><Travel />}/>
 
                             {/* Private Routes */}
-                            <Route path='/cart' render={()=><Cart loggedIn={loggedIn} user={user} cartItem={this.state.cartItem}/>}/>
+                            <Route path='/cart' render={()=><Cart loggedIn={loggedIn} user={user} cartItem={this.state.cartItem} addFromCart={this.addFromCart} removeFromCart={this.removeFromCart} />}/>
                             <Route path='/profile'render={()=><Profile loggedIn={loggedIn} user={user}/>}/>
                         </Switch>
                     </div>

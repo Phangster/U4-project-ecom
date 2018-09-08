@@ -24,8 +24,6 @@ export default class Profile extends React.Component {
 
     render(){
         const {user, loggedIn} = this.props
-        console.log(user.user_name)
-        
         if(!loggedIn){
             return <Redirect to = '/login' />
         }

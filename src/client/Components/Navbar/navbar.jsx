@@ -32,7 +32,7 @@ export default class Navbar extends React.Component {
                             <li>
                                 <div id="cart-container">
                                     <div id="cart" style={{fontSize: '12px'}}>
-                                        <Link to='/cart' onClick={this.props.cartItem}className="fa fa-shopping-cart fa-2x openCloseCart"aria-hidden="true"></Link>
+                                        <Link to='/cart' onClick={this.props.getCartItem}className="fa fa-shopping-cart fa-2x openCloseCart"aria-hidden="true"></Link>
                                     </div>
                                     <span style={styles.cart}>{this.props.itemCount}</span>
                                 </div>

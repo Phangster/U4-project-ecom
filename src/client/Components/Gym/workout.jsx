@@ -15,7 +15,6 @@ const styles = {
         position: 'relative',
     },
 }
-
 const display =  {
     marginTop: '80px',
 }
@@ -33,8 +32,10 @@ export default class workout extends React.Component {
         super();
     }
     render(){
-        const items = this.props.getItems;
-        const content = items.map((item, index)=>{
+        const {getItems} = this.props;
+
+        // const items = this.props.getItems;
+        const content = getItems.map((item, index)=>{
             return(
                 <li>
                     <div className="col s6 m4" style={display}>
@@ -51,7 +52,7 @@ export default class workout extends React.Component {
                             <span className="card-title grey-text text-darken-4">{item.item}<i className="material-icons right">close</i></span>
                             <p>{item.long_description}}</p>
                             <p className="price">${item.price.toFixed(2)}</p>
-                            <a className="waves-effect waves-light btn" id={index} price={item.price} image={item.img} item= {item.item} onClick={this.props.addItemHandler}>Add to Cart</a>
+                            <a className="waves-effect waves-light btn" id={index} onClick={this.props.addItemHandler}>Add to Cart</a>
                         </div>
                     </div>
                     </div>
